@@ -24,3 +24,24 @@ command_allow = [
 path = "README.md"
 required_headings = ["Install", "Usage", "Flake", "Example", "TruthMD", "CI gates", "MCP"]
 require_bound_fences = true
+
+[[docs]]
+path = "docs/ARCHITECTURE.md"
+required_headings = ["Why HTML comments", "Edit protocol", "MCP contract"]
+require_bound_fences = true
+
+[[docs]]
+path = "docs/ADVERSARY-AUDIT.md"
+require_bound_fences = true
+coverage = "off"
+
+[[docs]]
+path = "AGENTS.md"
+require_bound_fences = true
+coverage = "off"
+
+[[docs]]
+path = "SECURITY.md"
+required_headings = ["Report"]
+require_bound_fences = true
+coverage = "off"
