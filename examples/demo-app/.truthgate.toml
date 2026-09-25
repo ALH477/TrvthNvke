@@ -1,0 +1,7 @@
+[policy]
+fail_on = "error"
+
+[[docs]]
+path = "README.md"
+required_headings = ["Install", "Usage"]
+require_bound_fences = true

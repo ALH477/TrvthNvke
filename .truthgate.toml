@@ -1,0 +1,26 @@
+[policy]
+fail_on = "error"
+allow_unbound_prose = true
+command_mode = "allowlist"
+command_timeout_sec = 15
+require_lock = true
+lock_path = ".truthgate.lock"
+coverage = "paths"
+coverage_severity = "warning"
+require_entailment = true
+ignore_requires_reason = true
+strict_ignore = true
+receipt_path = ".truthgate/receipt.json"
+version_file = "pyproject.toml"
+version_key = "project.version"
+command_allow = [
+  ["python3", "-m", "truthgate"],
+  ["python", "-m", "truthgate"],
+  ["test", "-f"],
+  ["test", "-d"],
+]
+
+[[docs]]
+path = "README.md"
+required_headings = ["Install", "Usage", "Flake", "Example", "TruthMD", "CI gates", "MCP"]
+require_bound_fences = true

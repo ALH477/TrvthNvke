@@ -1,0 +1,17 @@
+[policy]
+fail_on = "error"
+command_mode = "allowlist"
+require_lock = true
+lock_path = ".truthgate.lock"
+require_entailment = true
+strict_ignore = true
+command_allow = [
+  ["python3", "-m", "truthgate"],
+  ["test", "-f"],
+  ["test", "-d"],
+]
+
+[[docs]]
+path = "README.md"
+required_headings = ["Install", "Usage"]
+require_bound_fences = true

@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "truthgate"
+version = "0.2.0"
+description = "DeMoD LLC Truthgate — claim-verified READMEs, CI gates, and an agent MCP."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "ALH477" },
+  { name = "DeMoD LLC" },
+]
+keywords = ["readme", "docs-as-code", "ci", "mcp", "git", "nix", "demod"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+]
+dependencies = []
+
+[project.scripts]
+truthgate = "truthgate.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

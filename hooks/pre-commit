@@ -1,0 +1,6 @@
+#!/bin/sh
+# Copy via `truthgate install-hook` or `cp hooks/pre-commit .git/hooks/pre-commit`
+if command -v truthgate >/dev/null 2>&1; then
+  exec truthgate verify --fail
+fi
+exec python3 -m truthgate verify --fail
