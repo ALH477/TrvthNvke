@@ -72,9 +72,14 @@ def console_scripts(root: Path, pyproject: str = "pyproject.toml") -> dict[str, 
         return {}
     if not path.is_file():
         return {}
-    data = tomllib.loads(path.read_text(encoding="utf-8"))
-    scripts = data.get("project", {}).get("scripts", {})
-    return {str(k): str(v) for k, v in dict(scripts).items()}
+    try:
+        data = tomllib.loads(path.read_text(encoding="utf-8"))
+    except (tomllib.TOMLDecodeError, UnicodeDecodeError, OSError):
+        return {}
+    scripts = data.get("project", {}).get("scripts", {}) if isinstance(data, dict) else {}
+    if not isinstance(scripts, dict):
+        return {}
+    return {str(k): str(v) for k, v in scripts.items()}
 
 
 def split_target(target: str) -> tuple[str, str] | None:

@@ -285,3 +285,12 @@ Installing the package provides the `mytool` command.
     policy = Policy(root=tmp_path, docs=[DocPolicy(path="README.md")], require_lock=False, coverage="off")
     report = verify_repo(tmp_path, policy)
     assert report.ok, [f.to_dict() for f in report.findings]
+
+
+def test_console_scripts_tolerates_malformed_pyproject(tmp_path: Path) -> None:
+    from truthgate.pyresolve import console_scripts
+
+    (tmp_path / "pyproject.toml").write_text("[project\nscripts = broken", encoding="utf-8")
+    assert console_scripts(tmp_path) == {}
+    (tmp_path / "pyproject.toml").write_text('[project]\nscripts = "not-a-table"\n', encoding="utf-8")
+    assert console_scripts(tmp_path) == {}
