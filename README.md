@@ -16,9 +16,9 @@ id: version
 kind: version_sync
 path: pyproject.toml
 key: project.version
-equals: 0.2.0
+equals: 0.3.0
 -->
-Current version: **0.2.0**.
+Current version: **0.3.0**.
 <!-- truth:end -->
 
 ## Install
@@ -28,7 +28,16 @@ id: cli-module
 kind: file_exists
 path: src/truthgate/cli.py
 -->
-The CLI entry is `src/truthgate/cli.py`, exposed as the `truthgate` console script.
+The CLI entry is `src/truthgate/cli.py`.
+<!-- truth:end -->
+
+<!-- truth:claim
+id: console-script
+kind: entrypoint
+name: truthgate
+target: truthgate.cli:main
+-->
+It is exposed as the `truthgate` console script, wired to `truthgate.cli:main`.
 <!-- truth:end -->
 
 <!-- truth:claim
@@ -39,13 +48,22 @@ path: src/truthgate/mcp_server.py
 The agent server is `src/truthgate/mcp_server.py`.
 <!-- truth:end -->
 
+<!-- truth:claim
+id: mcp-entry
+kind: python_symbol
+module: truthgate.mcp_server
+symbol: run_stdio
+-->
+Its stdio loop is `run_stdio`, a real function, not a promise.
+<!-- truth:end -->
+
 ```bash truth:id=help truth:kind=command truth:expect_exit=0 truth:expect_stdout=Force README
 PYTHONPATH=src python3 -m truthgate --help
 ```
 
 From a checkout:
 
-```bash truth:id=editable-help truth:kind=command truth:expect_exit=0 truth:expect_stdout=0.2.0
+```bash truth:id=editable-help truth:kind=command truth:expect_exit=0 truth:expect_stdout=0.3.0
 PYTHONPATH=src python3 -m truthgate --version
 ```
 
@@ -75,7 +93,7 @@ Structured edits (what the MCP applies):
 ```
 
 ```bash truth:id=edit-dry truth:kind=command truth:expect_exit=0
-PYTHONPATH=src python3 -m truthgate edit --doc README.md --dry-run --ops '[{"op":"replace_claim_body","id":"version","body":"Current version: **0.2.0**."}]'
+PYTHONPATH=src python3 -m truthgate edit --doc README.md --dry-run --ops '[{"op":"replace_claim_body","id":"version","body":"Current version: **0.3.0**."}]'
 ```
 
 ## Flake
@@ -259,13 +277,17 @@ print("documentation sample")
 | --- | --- |
 | `file_exists` / `dir_exists` | path is present |
 | `glob_count` | `equals` / `min` / `max` against a glob |
-| `file_contains` | regex or substring in a file |
+| `file_contains` | literal `pattern` (or opt-in `regex`) present in a file |
 | `json_pointer` / `toml_key` | value at a pointer equals `equals` |
 | `command` | shell command exit + optional stdout |
 | `heading` | heading text exists |
 | `rel_link` | relative target exists |
 | `version_sync` | version file matches README |
+| `python_symbol` | module resolves under `python_roots`; optional `symbol` is defined at top level (static, via `ast`) |
+| `entrypoint` | console script exists in `pyproject.toml`; optional `target` matches; target function is defined |
 | `prose` | tracked, not executed |
+
+`file_contains` matches a literal substring by default. Use `regex:` instead of `pattern:` to opt into Python `re` (256-char pattern cap, 2 MiB text cap, `regex_timeout_sec` timeout). Path-token coverage warnings scan every top-level directory of the repository unless `coverage_dirs` narrows the list.
 
 Policy lives in `.truthgate.toml`.
 

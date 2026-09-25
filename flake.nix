@@ -11,7 +11,7 @@
       overlay = final: prev: {
         truthgate = final.callPackage ./nix/package.nix {
           src = self;
-          version = "0.2.0";
+          version = "0.3.0";
         };
       };
     in
