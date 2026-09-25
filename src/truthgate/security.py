@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import functools
 import hashlib
 import os
 import re
 import shlex
+import signal
 import subprocess
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -19,6 +22,10 @@ class CommandDenied(ValueError):
     pass
 
 
+class RegexTimeout(ValueError):
+    pass
+
+
 ALLOWED_ENV_DEFAULT = ("PYTHONPATH", "TRUTHGATE_OFFLINE", "LANG", "LC_ALL")
 DEFAULT_ARGV_PREFIXES = (
     ("python3", "-m", "truthgate"),
@@ -27,10 +34,61 @@ DEFAULT_ARGV_PREFIXES = (
     ("test", "-d"),
 )
 
-PATHISH = re.compile(
-    r"(?<![A-Za-z0-9_])((?:src|nix|docs|hooks|templates|examples|\.github|\.truthgate)"
-    r"/[A-Za-z0-9_./-]+|[A-Za-z0-9_./-]+\.(?:py|toml|yml|yaml|md|nix|json|sh))"
-)
+DEFAULT_COVERAGE_EXTS = ("py", "toml", "yml", "yaml", "md", "nix", "json", "sh")
+
+MAX_PATTERN_LEN = 256
+MAX_SEARCH_TEXT = 2 * 1024 * 1024
+
+_EXCLUDED_TOP_DIRS = {
+    ".git",
+    "__pycache__",
+    "node_modules",
+    ".venv",
+    "venv",
+    "dist",
+    "build",
+    ".direnv",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+}
+_INCLUDED_HIDDEN_DIRS = {".github", ".truthgate"}
+
+
+@functools.lru_cache(maxsize=None)
+def pathish_pattern(dirs: tuple[str, ...], exts: tuple[str, ...]) -> re.Pattern[str]:
+    alternatives = []
+    if dirs:
+        dir_alt = "|".join(re.escape(d) for d in dirs)
+        alternatives.append(rf"(?:{dir_alt})/[A-Za-z0-9_./-]+")
+    if exts:
+        ext_alt = "|".join(re.escape(e) for e in exts)
+        alternatives.append(rf"[A-Za-z0-9_./-]+\.(?:{ext_alt})")
+    if not alternatives:
+        return re.compile(r"(?!x)x")
+    body = "|".join(alternatives)
+    return re.compile(rf"(?<![A-Za-z0-9_])({body})")
+
+
+def discover_top_dirs(root: Path) -> list[str]:
+    names: list[str] = []
+    for entry in root.iterdir():
+        if entry.is_symlink():
+            continue
+        if not entry.is_dir():
+            continue
+        name = entry.name
+        if name in _EXCLUDED_TOP_DIRS:
+            continue
+        if name.endswith(".egg-info"):
+            continue
+        if name == "result" or name.startswith("result-"):
+            continue
+        if name.startswith("."):
+            if name not in _INCLUDED_HIDDEN_DIRS:
+                continue
+        names.append(name)
+    return sorted(names)
 
 
 def sha256_text(text: str) -> str:
@@ -146,8 +204,29 @@ def run_confined_command(
     )
 
 
-def coverage_tokens(visible: str) -> set[str]:
-    return {m.group(1) for m in PATHISH.finditer(visible)}
+def coverage_tokens(visible: str, dirs: list[str] | tuple[str, ...], exts: list[str] | tuple[str, ...]) -> set[str]:
+    pattern = pathish_pattern(tuple(dirs), tuple(exts))
+    return {m.group(1) for m in pattern.finditer(visible)}
+
+
+def bounded_regex_search(pattern: str, text: str, flags: int = 0, timeout_sec: float = 2.0) -> re.Match[str] | None:
+    if len(pattern) > MAX_PATTERN_LEN:
+        raise ValueError("pattern too long")
+    if len(text) > MAX_SEARCH_TEXT:
+        raise ValueError("text too large for pattern search")
+    compiled = re.compile(pattern, flags)
+    if hasattr(signal, "setitimer") and threading.current_thread() is threading.main_thread() and timeout_sec > 0:
+        def _on_alarm(signum: int, frame: Any) -> None:
+            raise RegexTimeout("pattern timed out")
+
+        previous = signal.signal(signal.SIGALRM, _on_alarm)
+        signal.setitimer(signal.ITIMER_REAL, timeout_sec)
+        try:
+            return compiled.search(text)
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, previous)
+    return compiled.search(text)
 
 
 def strip_ignored_and_comments(text: str, ignored_spans: list[tuple[int, int]]) -> str:

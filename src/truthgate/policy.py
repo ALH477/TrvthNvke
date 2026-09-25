@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from .security import DEFAULT_ARGV_PREFIXES
+from .security import DEFAULT_ARGV_PREFIXES, DEFAULT_COVERAGE_EXTS
 
 
 DEFAULT_CONFIG_NAMES = (".truthgate.toml", "truthgate.toml")
@@ -17,6 +17,7 @@ class DocPolicy:
     path: str
     required_headings: list[str] = field(default_factory=list)
     require_bound_fences: bool = True
+    coverage: str | None = None
 
 
 @dataclass
@@ -38,6 +39,10 @@ class Policy:
     lock_path: str = ".truthgate.lock"
     coverage: str = "paths"
     coverage_severity: str = "warning"
+    coverage_dirs: list[str] = field(default_factory=list)
+    coverage_exts: list[str] = field(default_factory=lambda: list(DEFAULT_COVERAGE_EXTS))
+    python_roots: list[str] = field(default_factory=lambda: ["src", "."])
+    regex_timeout_sec: float = 2.0
     require_entailment: bool = True
     ignore_requires_reason: bool = True
     strict_ignore: bool = False
@@ -79,6 +84,7 @@ def load_policy(root: Path) -> Policy:
                     path=str(item.get("path", "README.md")),
                     required_headings=list(item.get("required_headings") or []),
                     require_bound_fences=bool(item.get("require_bound_fences", True)),
+                    coverage=item.get("coverage"),
                 )
             )
     if not docs and (root / "README.md").is_file():
@@ -112,6 +118,10 @@ def load_policy(root: Path) -> Policy:
         lock_path=str(policy_raw.get("lock_path", ".truthgate.lock")),
         coverage=str(policy_raw.get("coverage", "paths")),
         coverage_severity=str(policy_raw.get("coverage_severity", "warning")),
+        coverage_dirs=list(policy_raw.get("coverage_dirs") or []),
+        coverage_exts=list(policy_raw.get("coverage_exts") or list(DEFAULT_COVERAGE_EXTS)),
+        python_roots=list(policy_raw.get("python_roots") or ["src", "."]),
+        regex_timeout_sec=float(policy_raw.get("regex_timeout_sec", 2.0)),
         require_entailment=bool(policy_raw.get("require_entailment", True)),
         ignore_requires_reason=bool(policy_raw.get("ignore_requires_reason", True)),
         strict_ignore=bool(policy_raw.get("strict_ignore", False)),
@@ -130,6 +140,10 @@ require_lock = true
 lock_path = ".truthgate.lock"
 coverage = "paths"
 coverage_severity = "warning"
+# coverage_dirs = ["src", "docs"]      # default: every top-level directory
+# coverage_exts = ["py", "toml", "md"] # default: py toml yml yaml md nix json sh
+# regex_timeout_sec = 2.0
+# python_roots = ["src", "."]
 require_entailment = true
 ignore_requires_reason = true
 strict_ignore = true

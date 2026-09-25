@@ -14,8 +14,11 @@ from .pyresolve import console_scripts, has_symbol, resolve_module, split_target
 from .security import (
     CommandDenied,
     ConfineError,
+    RegexTimeout,
+    bounded_regex_search,
     confine,
     coverage_tokens,
+    discover_top_dirs,
     run_confined_command,
     strip_ignored_and_comments,
 )
@@ -132,9 +135,13 @@ def check_claim(root: Path, claim: Claim, policy: Policy) -> tuple[bool, str]:
 
     if kind == "file_contains":
         rel = attrs.get("path") or attrs.get("file")
-        pattern = attrs.get("pattern") or attrs.get("regex") or attrs.get("text")
-        if not rel or not pattern:
-            return False, "file_contains needs path and pattern"
+        regex_pat = attrs.get("regex")
+        literal = attrs.get("pattern") or attrs.get("text")
+        if not rel or (not regex_pat and not literal):
+            return False, "file_contains needs path and pattern (or regex)"
+        if regex_pat and literal:
+            return False, "file_contains takes pattern or regex, not both"
+        pattern = regex_pat or literal
         if len(pattern) > 256:
             return False, "file_contains pattern too long"
         try:
@@ -144,17 +151,29 @@ def check_claim(root: Path, claim: Claim, policy: Policy) -> tuple[bool, str]:
         if not target.is_file():
             return False, f"missing file {rel}"
         text = target.read_text(encoding="utf-8")
-        flags = re.MULTILINE
-        if attrs.get("ignore_case") in {"1", "true", "yes"}:
-            flags |= re.IGNORECASE
-        try:
-            found = re.search(pattern, text, flags) is not None
-        except re.error as exc:
-            return False, f"invalid pattern: {exc}"
+        if len(text) > 2 * 1024 * 1024:
+            return False, "file too large for pattern search"
+        ignore_case = attrs.get("ignore_case") in {"1", "true", "yes"}
+        if regex_pat:
+            flags = re.MULTILINE
+            if ignore_case:
+                flags |= re.IGNORECASE
+            try:
+                found = bounded_regex_search(regex_pat, text, flags, policy.regex_timeout_sec) is not None
+            except re.error as exc:
+                return False, f"invalid pattern: {exc}"
+            except RegexTimeout:
+                return False, "pattern timed out"
+        else:
+            if ignore_case:
+                found = literal.lower() in text.lower()
+            else:
+                found = literal in text
         ok_ent, ent = _entail(claim, rel, policy)
         if not ok_ent:
             return False, ent
-        return found, f"pattern {'found' if found else 'not found'} in {rel}"
+        kind_label = "regex" if regex_pat else "literal"
+        return found, f"{kind_label} {'found' if found else 'not found'} in {rel}"
 
     if kind in {"json_pointer", "toml_key"}:
         rel = attrs.get("path") or attrs.get("file")
@@ -207,7 +226,13 @@ def check_claim(root: Path, claim: Claim, policy: Policy) -> tuple[bool, str]:
                 pat = stdout_pat[2:-1]
                 if len(pat) > 128:
                     return False, "stdout pattern too long"
-                if not re.search(pat, proc.stdout or ""):
+                try:
+                    matched = bounded_regex_search(pat, proc.stdout or "", 0, policy.regex_timeout_sec)
+                except re.error:
+                    return False, "invalid stdout pattern"
+                except RegexTimeout:
+                    return False, "stdout pattern timed out"
+                if not matched:
                     return False, f"stdout did not match /{pat}/"
             elif stdout_pat not in (proc.stdout or ""):
                 return False, "stdout missing expected substring"
@@ -359,6 +384,9 @@ def verify_repo(root: Path, policy: Policy) -> VerifyReport:
     if lock_finding:
         findings.append(lock_finding)
 
+    cov_dirs = policy.coverage_dirs or discover_top_dirs(root)
+    cov_exts = policy.coverage_exts
+
     for doc_policy in policy.docs:
         try:
             path = confine(root, doc_policy.path)
@@ -449,6 +477,8 @@ def verify_repo(root: Path, policy: Policy) -> VerifyReport:
                     )
                 )
 
+        mode = doc_policy.coverage or policy.coverage
+
         bound_needles: set[str] = set()
         for claim in claims:
             if claim.attrs.get("unbound") == "true":
@@ -456,7 +486,7 @@ def verify_repo(root: Path, policy: Policy) -> VerifyReport:
             for key in ("path", "file", "glob", "href"):
                 if claim.attrs.get(key):
                     bound_needles.add(str(claim.attrs[key]))
-            bound_needles.update(coverage_tokens(claim.body or ""))
+            bound_needles.update(coverage_tokens(claim.body or "", cov_dirs, cov_exts))
             ok, evidence = check_claim(root, claim, policy)
             receipts.append(
                 {
@@ -482,9 +512,9 @@ def verify_repo(root: Path, policy: Policy) -> VerifyReport:
                     )
                 )
 
-        if policy.coverage == "paths":
+        if mode == "paths":
             visible = strip_ignored_and_comments(text, ignored_fence_spans(text))
-            for token in coverage_tokens(visible):
+            for token in coverage_tokens(visible, cov_dirs, cov_exts):
                 if token in bound_needles:
                     continue
                 if any(token in (c.body or "") or token in str(c.attrs) for c in claims):
