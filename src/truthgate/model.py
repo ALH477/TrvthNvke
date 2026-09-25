@@ -22,6 +22,8 @@ class ClaimKind(str, Enum):
     HEADING = "heading"
     REL_LINK = "rel_link"
     VERSION_SYNC = "version_sync"
+    PYTHON_SYMBOL = "python_symbol"
+    ENTRYPOINT = "entrypoint"
     PROSE = "prose"  # bound prose with no machine check; still tracked
 
 

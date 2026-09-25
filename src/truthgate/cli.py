@@ -160,6 +160,8 @@ def cmd_schema(ns: argparse.Namespace) -> int:
                     "heading",
                     "rel_link",
                     "version_sync",
+                    "python_symbol",
+                    "entrypoint",
                     "prose",
                 ]
             },
@@ -178,6 +180,11 @@ def cmd_schema(ns: argparse.Namespace) -> int:
             "timeout": {"type": "integer"},
             "href": {"type": "string"},
             "title": {"type": "string"},
+            "module": {"type": "string"},
+            "symbol": {"type": "string"},
+            "roots": {"type": "string"},
+            "name": {"type": "string"},
+            "target": {"type": "string"},
         },
         "edit_ops": [
             "replace_claim_body",
