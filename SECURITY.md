@@ -24,4 +24,9 @@ Truthgate 0.2 treats the verifier as a **hostile-input linter**. README text, po
 
 ## Report
 
+<!-- truth:claim
+id: sec-report
+kind: prose
+-->
 DeMoD LLC / ALH477 — https://github.com/ALH477/truthgate
+<!-- truth:end -->
