@@ -88,4 +88,4 @@ pattern: nixos-24.11
 M11's pin is `nixos-24.11` in `flake.nix`.
 <!-- truth:end -->
 
-Residual: allowlisted binaries still run as the CI user; unbound prose can still lie; receipts are unsigned; `file_contains` and stdout regexes run without a timeout.
+Residual: allowlisted binaries still run as the CI user; unbound prose can still lie; receipts are unsigned; regex timeouts apply only on the main thread (embedders on worker threads get the size caps alone).
