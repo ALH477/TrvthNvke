@@ -220,6 +220,8 @@ class TruthgateMCP:
                     "heading",
                     "rel_link",
                     "version_sync",
+                    "python_symbol",
+                    "entrypoint",
                     "prose",
                 ],
                 "ops": [

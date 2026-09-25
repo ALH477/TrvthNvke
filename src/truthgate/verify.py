@@ -10,6 +10,7 @@ from typing import Any
 from .model import Claim, Finding, VerifyReport
 from .parse import extract_headings, extract_rel_links, ignored_fence_spans, parse_document
 from .policy import Policy, find_policy_file
+from .pyresolve import console_scripts, has_symbol, resolve_module, split_target
 from .security import (
     CommandDenied,
     ConfineError,
@@ -254,6 +255,60 @@ def check_claim(root: Path, claim: Claim, policy: Policy) -> tuple[bool, str]:
         body = claim.body or ""
         ok = str(value) == str(needle) and str(value) in body
         return ok, f"version {value!r} vs claimed {needle!r}"
+
+    if kind == "python_symbol":
+        module = attrs.get("module")
+        if not module:
+            return False, "python_symbol needs module"
+        symbol = attrs.get("symbol")
+        roots_attr = attrs.get("roots")
+        if roots_attr:
+            roots = [r.strip() for r in roots_attr.split(",") if r.strip()]
+        else:
+            roots = getattr(policy, "python_roots", None) or ["src", "."]
+        path = resolve_module(root, module, roots)
+        if path is None:
+            return False, f"module {module!r} not found under {roots}"
+        rel = path.relative_to(root.resolve()).as_posix()
+        if symbol and not has_symbol(path, symbol):
+            return False, f"symbol {symbol!r} not defined in {rel}"
+        ok_ent, ent = _entail(claim, symbol or module, policy)
+        if not ok_ent:
+            return False, ent
+        evidence = f"{module} -> {rel}"
+        if symbol:
+            evidence += f" defines {symbol}"
+        return True, evidence
+
+    if kind == "entrypoint":
+        name = attrs.get("name")
+        if not name:
+            return False, "entrypoint needs name"
+        target = attrs.get("target")
+        scripts = console_scripts(root)
+        if name not in scripts:
+            return False, f"console script {name!r} not declared in pyproject.toml"
+        if target and scripts[name] != target:
+            return False, f"console script {name!r} -> {scripts[name]!r}, expected {target!r}"
+        parsed = split_target(scripts[name])
+        if parsed is None:
+            return False, "malformed console script target"
+        module, func = parsed
+        roots_attr = attrs.get("roots")
+        if roots_attr:
+            roots = [r.strip() for r in roots_attr.split(",") if r.strip()]
+        else:
+            roots = getattr(policy, "python_roots", None) or ["src", "."]
+        path = resolve_module(root, module, roots)
+        if path is None:
+            return False, f"module {module!r} not found under {roots}"
+        rel = path.relative_to(root.resolve()).as_posix()
+        if not has_symbol(path, func):
+            return False, f"{func!r} not defined in {rel}"
+        ok_ent, ent = _entail(claim, name, policy)
+        if not ok_ent:
+            return False, ent
+        return True, f"{name} -> {scripts[name]} ({rel})"
 
     return False, f"no verifier for kind {kind}"
 
