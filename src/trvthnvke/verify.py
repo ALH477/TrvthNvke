@@ -352,7 +352,7 @@ def _check_policy_lock(root: Path, policy: Policy) -> Finding | None:
         return Finding(None, policy.lock_path, 1, "error", "missing_policy", "require_lock set but no policy file")
     lock = root / policy.lock_path
     if not lock.is_file():
-        return Finding(None, policy.lock_path, 1, "error", "missing_lock", f"missing {policy.lock_path}; run truthgate lock")
+        return Finding(None, policy.lock_path, 1, "error", "missing_lock", f"missing {policy.lock_path}; run trvthnvke lock")
     try:
         payload = json.loads(lock.read_text(encoding="utf-8"))
         expected = payload.get("sha256")
@@ -368,7 +368,7 @@ def _check_policy_lock(root: Path, policy: Policy) -> Finding | None:
             1,
             "error",
             "policy_drift",
-            "policy file hash does not match .truthgate.lock",
+            "policy file hash does not match .trvthnvke.lock",
             evidence=f"lock={expected} actual={actual}",
         )
     return None

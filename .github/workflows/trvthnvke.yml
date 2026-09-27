@@ -1,4 +1,4 @@
-name: Truthgate
+name: TrvthNvke
 
 on:
   pull_request:
@@ -16,11 +16,11 @@ jobs:
       - name: Install
         run: pip install -e .
       - name: Verify policy lock and README claims
-        run: truthgate verify --fail --receipt --json
+        run: trvthnvke verify --fail --receipt --json
       - name: Upload receipt
         if: always()
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
-          name: truthgate-receipt
-          path: .truthgate/receipt.json
+          name: trvthnvke-receipt
+          path: .trvthnvke/receipt.json
           if-no-files-found: ignore

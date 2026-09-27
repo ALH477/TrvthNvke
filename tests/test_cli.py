@@ -1,11 +1,11 @@
 import json
 from pathlib import Path
 
-from truthgate.cli import main
+from trvthnvke.cli import main
 
 
 def _repo(tmp: Path) -> None:
-    (tmp / ".truthgate.toml").write_text('[policy]\nrequire_lock = false\n\n[[docs]]\npath = "README.md"\n', encoding="utf-8")
+    (tmp / ".trvthnvke.toml").write_text('[policy]\nrequire_lock = false\n\n[[docs]]\npath = "README.md"\n', encoding="utf-8")
     (tmp / "README.md").write_text(
         "# App\n\n<!-- truth:claim\nid: v\nkind: prose\n-->\nold\n<!-- truth:end -->\n",
         encoding="utf-8",

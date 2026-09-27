@@ -5,5 +5,6 @@ __pycache__/
 dist/
 build/
 .venv/
+.trvthnvke/receipt.json
 .truthgate/receipt.json
 .claude/

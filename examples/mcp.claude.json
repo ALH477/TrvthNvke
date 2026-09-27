@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "truthgate": {
+    "trvthnvke": {
       "command": "python3",
-      "args": ["-m", "truthgate", "mcp"],
+      "args": ["-m", "trvthnvke", "mcp"],
       "env": {
         "PYTHONPATH": "src"
       }

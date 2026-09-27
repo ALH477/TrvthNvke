@@ -1,35 +1,35 @@
 {
-  description = "Example DeMoD repository importing Truthgate from github:ALH477/truthgate";
+  description = "Example DeMoD repository importing TrvthNvke from github:ALH477/trvthnvke";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    truthgate.url = "github:ALH477/truthgate";
+    trvthnvke.url = "github:ALH477/trvthnvke";
   };
 
-  outputs = { self, nixpkgs, flake-utils, truthgate }:
+  outputs = { self, nixpkgs, flake-utils, trvthnvke }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ truthgate.overlays.default ];
+          overlays = [ trvthnvke.overlays.default ];
         };
       in {
         devShells.default = pkgs.mkShell {
-          packages = [ pkgs.truthgate pkgs.python3 pkgs.git ];
+          packages = [ pkgs.trvthnvke pkgs.python3 pkgs.git ];
           shellHook = ''
-            echo "Truthgate ready: $(command -v truthgate)"
-            echo "Gate this tree with: truthgate verify --fail"
+            echo "TrvthNvke ready: $(command -v trvthnvke)"
+            echo "Gate this tree with: trvthnvke verify --fail"
           '';
         };
 
-        checks.readme = pkgs.runCommand "truthgate-readme" {
-          nativeBuildInputs = [ pkgs.truthgate ];
+        checks.readme = pkgs.runCommand "trvthnvke-readme" {
+          nativeBuildInputs = [ pkgs.trvthnvke ];
           src = self;
         } ''
           cp -r "$src"/. .
           chmod -R u+w .
-          truthgate verify --fail
+          trvthnvke verify --fail
           mkdir -p "$out"
           echo ok > "$out/receipt"
         '';

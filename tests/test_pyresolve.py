@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from truthgate.model import Claim
-from truthgate.policy import DocPolicy, Policy
-from truthgate.pyresolve import console_scripts, has_symbol, resolve_module, split_target
-from truthgate.verify import check_claim, verify_repo
+from trvthnvke.model import Claim
+from trvthnvke.policy import DocPolicy, Policy
+from trvthnvke.pyresolve import console_scripts, has_symbol, resolve_module, split_target
+from trvthnvke.verify import check_claim, verify_repo
 
 
 # ---------------------------------------------------------------------------
@@ -288,7 +288,7 @@ Installing the package provides the `mytool` command.
 
 
 def test_console_scripts_tolerates_malformed_pyproject(tmp_path: Path) -> None:
-    from truthgate.pyresolve import console_scripts
+    from trvthnvke.pyresolve import console_scripts
 
     (tmp_path / "pyproject.toml").write_text("[project\nscripts = broken", encoding="utf-8")
     assert console_scripts(tmp_path) == {}

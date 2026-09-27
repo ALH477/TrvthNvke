@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "truthgate"
-version = "0.3.0"
-description = "DeMoD LLC Truthgate — claim-verified READMEs, CI gates, and an agent MCP."
+name = "trvthnvke"
+version = "0.4.0"
+description = "DeMoD LLC TrvthNvke — claim-verified READMEs, CI gates, and an agent MCP."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
@@ -23,7 +23,9 @@ classifiers = [
 dependencies = []
 
 [project.scripts]
-truthgate = "truthgate.cli:main"
+trvthnvke = "trvthnvke.cli:main"
+# Compatibility alias for the pre-0.4.0 name. Same entry point.
+truthgate = "trvthnvke.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]

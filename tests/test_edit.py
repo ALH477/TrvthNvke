@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from truthgate.edit import apply_ops, write_if_ok
-from truthgate.parse import parse_document
+from trvthnvke.edit import apply_ops, write_if_ok
+from trvthnvke.parse import parse_document
 
 
 def test_upsert_and_replace(tmp_path: Path) -> None:
@@ -66,7 +66,7 @@ def test_replace_section_ignores_hash_inside_fence(tmp_path: Path) -> None:
 
 
 def test_find_block_skips_ignored_fence_samples(tmp_path: Path) -> None:
-    from truthgate.edit import _find_block
+    from trvthnvke.edit import _find_block
 
     text = (
         "# T\n\n"

@@ -5,15 +5,15 @@
   ...
 }:
 let
-  cfg = config.demod.truthgate;
+  cfg = config.demod.trvthnvke;
 in
 {
-  options.demod.truthgate = {
-    enable = lib.mkEnableOption "DeMoD Truthgate CLI and MCP on this system";
+  options.demod.trvthnvke = {
+    enable = lib.mkEnableOption "DeMoD TrvthNvke CLI and MCP on this system";
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.truthgate;
-      description = "Truthgate package to install.";
+      default = pkgs.trvthnvke;
+      description = "TrvthNvke package to install.";
     };
   };
 

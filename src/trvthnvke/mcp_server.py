@@ -32,12 +32,12 @@ def _tool(name: str, description: str, schema: dict[str, Any]) -> dict[str, Any]
 
 TOOLS = [
     _tool(
-        "truthgate_status",
-        "Show Truthgate policy, documented files, and last receipt for this repo.",
+        "trvthnvke_status",
+        "Show TrvthNvke policy, documented files, and last receipt for this repo.",
         {"type": "object", "properties": {}},
     ),
     _tool(
-        "truthgate_list_claims",
+        "trvthnvke_list_claims",
         "Extract bound and unbound claims from a documented markdown file.",
         {
             "type": "object",
@@ -47,7 +47,7 @@ TOOLS = [
         },
     ),
     _tool(
-        "truthgate_verify",
+        "trvthnvke_verify",
         "Run CI gates against the working tree. Returns structured findings and receipts.",
         {
             "type": "object",
@@ -57,7 +57,7 @@ TOOLS = [
         },
     ),
     _tool(
-        "truthgate_propose_edit",
+        "trvthnvke_propose_edit",
         "Preview structured README edits without writing. Ops: replace_claim_body, upsert_claim, remove_claim, replace_section, set_fence_meta.",
         {
             "type": "object",
@@ -73,7 +73,7 @@ TOOLS = [
         },
     ),
     _tool(
-        "truthgate_apply_edit",
+        "trvthnvke_apply_edit",
         "Apply structured README edits. Refuses to leave the tree failing gates unless force=true.",
         {
             "type": "object",
@@ -86,14 +86,14 @@ TOOLS = [
         },
     ),
     _tool(
-        "truthgate_schema",
+        "trvthnvke_schema",
         "Return claim kinds and allowed edit operations.",
         {"type": "object", "properties": {}},
     ),
 ]
 
 
-class TruthgateMCP:
+class TrvthNvkeMCP:
     def __init__(self, root: Path):
         self.root = root.resolve()
 
@@ -108,7 +108,7 @@ class TruthgateMCP:
                 "result": {
                     "protocolVersion": PROTOCOL_VERSION,
                     "capabilities": {"tools": {}},
-                    "serverInfo": {"name": "truthgate", "version": __version__},
+                    "serverInfo": {"name": "trvthnvke", "version": __version__},
                 },
             }
         if method == "notifications/initialized" or method is None:
@@ -147,7 +147,7 @@ class TruthgateMCP:
 
     def call_tool(self, name: str, args: dict[str, Any]) -> Any:
         policy = load_policy(self.root)
-        if name == "truthgate_status":
+        if name == "trvthnvke_status":
             return {
                 "root": str(self.root),
                 "docs": [d.path for d in policy.docs],
@@ -155,7 +155,7 @@ class TruthgateMCP:
                 "receipt_path": policy.receipt_path,
                 "receipt_exists": (self.root / policy.receipt_path).is_file(),
             }
-        if name == "truthgate_list_claims":
+        if name == "trvthnvke_list_claims":
             rel = args.get("doc") or policy.docs[0].path
             path = confine(self.root, rel)
             if path.suffix.lower() not in {".md", ".markdown", ".txt"}:
@@ -166,27 +166,27 @@ class TruthgateMCP:
                 "issues": issues,
                 "claims": [c.to_dict() for c in claims],
             }
-        if name == "truthgate_verify":
+        if name == "trvthnvke_verify":
             report = verify_repo(self.root, policy)
             if args.get("write_receipt"):
                 write_receipt(self.root, policy.receipt_path, report)
             return report.to_dict()
-        if name == "truthgate_propose_edit":
+        if name == "trvthnvke_propose_edit":
             rel = args.get("doc") or "README.md"
             path = confine(self.root, rel)
             preview = preview_ops(path, list(args.get("ops") or []))
             return preview
-        if name == "truthgate_apply_edit":
+        if name == "trvthnvke_apply_edit":
             rel = args.get("doc") or "README.md"
             path = confine(self.root, rel)
             if path.suffix.lower() not in {".md", ".markdown"}:
                 raise ConfineError("edits limited to markdown documents")
             ops = list(args.get("ops") or [])
             force = bool(args.get("force"))
-            if force and os.environ.get("TRUTHGATE_ALLOW_FORCE") != "1":
+            if force and os.environ.get("TRVTHNVKE_ALLOW_FORCE") != "1":
                 return {
                     "applied": False,
-                    "error": "force is disabled unless TRUTHGATE_ALLOW_FORCE=1",
+                    "error": "force is disabled unless TRVTHNVKE_ALLOW_FORCE=1",
                 }
             preview = preview_ops(path, ops)
             if not preview.get("ok"):
@@ -207,7 +207,7 @@ class TruthgateMCP:
                     "preview": {k: v for k, v in preview.items() if k != "text"},
                 }
             return {"applied": True, "verify_ok": report.ok, "report": report.to_dict()}
-        if name == "truthgate_schema":
+        if name == "trvthnvke_schema":
             return {
                 "kinds": [
                     "file_exists",
@@ -242,7 +242,7 @@ def run_stdio(root: Path) -> None:
     Requests that arrive with LSP-style ``Content-Length`` headers are
     answered with the same framing.
     """
-    server = TruthgateMCP(root)
+    server = TrvthNvkeMCP(root)
     stdin = sys.stdin
     while True:
         line = stdin.readline()

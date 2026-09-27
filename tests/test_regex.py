@@ -2,10 +2,10 @@ import signal
 import threading
 from pathlib import Path
 
-from truthgate.model import Claim
-from truthgate.policy import Policy
-from truthgate.security import RegexTimeout, bounded_regex_search
-from truthgate.verify import check_claim
+from trvthnvke.model import Claim
+from trvthnvke.policy import Policy
+from trvthnvke.security import RegexTimeout, bounded_regex_search
+from trvthnvke.verify import check_claim
 
 
 def _claim(**attrs) -> Claim:

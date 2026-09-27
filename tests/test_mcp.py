@@ -3,7 +3,7 @@ import json
 import sys
 from pathlib import Path
 
-from truthgate.mcp_server import TruthgateMCP, run_stdio
+from trvthnvke.mcp_server import TrvthNvkeMCP, run_stdio
 
 
 def _repo(tmp: Path) -> Path:
@@ -12,13 +12,13 @@ def _repo(tmp: Path) -> Path:
 
 
 def test_handle_initialize_and_tools(tmp_path: Path) -> None:
-    server = TruthgateMCP(_repo(tmp_path))
+    server = TrvthNvkeMCP(_repo(tmp_path))
     init = server.handle({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}})
-    assert init and init["result"]["serverInfo"]["name"] == "truthgate"
+    assert init and init["result"]["serverInfo"]["name"] == "trvthnvke"
     assert server.handle({"jsonrpc": "2.0", "method": "notifications/initialized"}) is None
     tools = server.handle({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})
     names = {t["name"] for t in tools["result"]["tools"]}
-    assert "truthgate_apply_edit" in names
+    assert "trvthnvke_apply_edit" in names
 
 
 def test_stdio_replies_are_newline_delimited(tmp_path: Path, monkeypatch=None) -> None:
@@ -27,7 +27,7 @@ def test_stdio_replies_are_newline_delimited(tmp_path: Path, monkeypatch=None) -
         {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
         {"jsonrpc": "2.0", "method": "notifications/initialized"},
         {"jsonrpc": "2.0", "id": 2, "method": "tools/list"},
-        {"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "truthgate_status", "arguments": {}}},
+        {"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "trvthnvke_status", "arguments": {}}},
     ]
     stdin, stdout = sys.stdin, sys.stdout
     sys.stdin = io.StringIO("".join(json.dumps(r) + "\n" for r in requests))

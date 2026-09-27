@@ -2,11 +2,11 @@
 fail_on = "error"
 command_mode = "allowlist"
 require_lock = true
-lock_path = ".truthgate.lock"
+lock_path = ".trvthnvke.lock"
 require_entailment = true
 strict_ignore = true
 command_allow = [
-  ["python3", "-m", "truthgate"],
+  ["python3", "-m", "trvthnvke"],
   ["test", "-f"],
   ["test", "-d"],
 ]

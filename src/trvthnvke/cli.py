@@ -20,13 +20,13 @@ def _root(ns: argparse.Namespace) -> Path:
 
 def cmd_init(ns: argparse.Namespace) -> int:
     root = Path(ns.root).resolve() if ns.root else Path.cwd()
-    cfg = root / ".truthgate.toml"
+    cfg = root / ".trvthnvke.toml"
     if cfg.exists() and not ns.force:
         print(f"exists: {cfg}", file=sys.stderr)
         return 1
     cfg.write_text(default_config_text(), encoding="utf-8")
-    (root / ".truthgate").mkdir(exist_ok=True)
-    gitignore = root / ".truthgate" / ".gitignore"
+    (root / ".trvthnvke").mkdir(exist_ok=True)
+    gitignore = root / ".trvthnvke" / ".gitignore"
     if not gitignore.exists():
         gitignore.write_text("# keep directory; receipts may be committed or ignored\n", encoding="utf-8")
     print(f"wrote {cfg}")
@@ -37,7 +37,7 @@ def cmd_init(ns: argparse.Namespace) -> int:
         except FileNotFoundError as exc:
             print(f"hook skipped: {exc}", file=sys.stderr)
     try:
-        lock = dump_lock(root, ".truthgate.lock")
+        lock = dump_lock(root, ".trvthnvke.lock")
         print(f"wrote {lock}")
     except FileNotFoundError:
         pass
@@ -76,7 +76,7 @@ def cmd_verify(ns: argparse.Namespace) -> int:
         print(json.dumps(report.to_dict(), indent=2))
     else:
         status = "PASS" if report.ok else "FAIL"
-        print(f"truthgate {status}  claims={report.claims} checked={report.checked} passed={report.passed} errors={report.failed} warnings={report.warnings}")
+        print(f"trvthnvke {status}  claims={report.claims} checked={report.checked} passed={report.passed} errors={report.failed} warnings={report.warnings}")
         for f in report.findings:
             cid = f.claim_id or "-"
             extra = f" :: {f.evidence}" if f.evidence else ""
@@ -142,7 +142,7 @@ def cmd_mcp(ns: argparse.Namespace) -> int:
 
 def cmd_schema(ns: argparse.Namespace) -> int:
     schema = {
-        "$id": "https://truthgate.dev/schema/claim.json",
+        "$id": "urn:demod:truthmd:schema:claim",
         "title": "TruthMD claim",
         "type": "object",
         "required": ["id", "kind"],
@@ -199,12 +199,12 @@ def cmd_schema(ns: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="truthgate", description="Force README claims to match repository reality.")
-    p.add_argument("--version", action="version", version=f"truthgate {__version__}")
+    p = argparse.ArgumentParser(prog="trvthnvke", description="Force README claims to match repository reality.")
+    p.add_argument("--version", action="version", version=f"trvthnvke {__version__}")
     p.add_argument("--root", help="repository root (default: discover from cwd)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    init = sub.add_parser("init", help="write .truthgate.toml")
+    init = sub.add_parser("init", help="write .trvthnvke.toml")
     init.add_argument("--force", action="store_true")
     init.add_argument("--hook", action="store_true", help="also install git pre-commit hook")
     init.set_defaults(func=cmd_init)
@@ -228,7 +228,7 @@ def build_parser() -> argparse.ArgumentParser:
     ed.add_argument("--verify", action="store_true", help="re-verify after apply")
     ed.set_defaults(func=cmd_edit)
 
-    lockp = sub.add_parser("lock", help="write .truthgate.lock from current policy file")
+    lockp = sub.add_parser("lock", help="write .trvthnvke.lock from current policy file")
     lockp.set_defaults(func=cmd_lock)
 
     hook = sub.add_parser("install-hook", help="install pre-commit gate")

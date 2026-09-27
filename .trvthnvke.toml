@@ -4,18 +4,18 @@ allow_unbound_prose = true
 command_mode = "allowlist"
 command_timeout_sec = 15
 require_lock = true
-lock_path = ".truthgate.lock"
+lock_path = ".trvthnvke.lock"
 coverage = "paths"
 coverage_severity = "warning"
 require_entailment = true
 ignore_requires_reason = true
 strict_ignore = true
-receipt_path = ".truthgate/receipt.json"
+receipt_path = ".trvthnvke/receipt.json"
 version_file = "pyproject.toml"
 version_key = "project.version"
 command_allow = [
-  ["python3", "-m", "truthgate"],
-  ["python", "-m", "truthgate"],
+  ["python3", "-m", "trvthnvke"],
+  ["python", "-m", "trvthnvke"],
   ["test", "-f"],
   ["test", "-d"],
 ]

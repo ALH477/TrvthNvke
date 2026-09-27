@@ -1,3 +1,8 @@
-from .cli import main
+"""``python -m truthgate`` -> ``python -m trvthnvke``. See __init__ for why."""
 
-raise SystemExit(main())
+import sys
+
+from trvthnvke.cli import main
+
+if __name__ == "__main__":
+    sys.exit(main())

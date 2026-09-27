@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from truthgate.model import Claim
-from truthgate.policy import DocPolicy, Policy
-from truthgate.security import CommandDenied, ConfineError, confine, parse_command, run_confined_command
-from truthgate.verify import check_claim, verify_repo
+from trvthnvke.model import Claim
+from trvthnvke.policy import DocPolicy, Policy
+from trvthnvke.security import CommandDenied, ConfineError, confine, parse_command, run_confined_command
+from trvthnvke.verify import check_claim, verify_repo
 
 
 def test_confine_rejects_parent_and_absolute(tmp_path: Path) -> None:
@@ -90,6 +90,6 @@ def test_command_not_allowlisted(tmp_path: Path) -> None:
 
 
 def test_parse_command_env() -> None:
-    env, argv = parse_command('PYTHONPATH=src python3 -m truthgate --version')
+    env, argv = parse_command('PYTHONPATH=src python3 -m trvthnvke --version')
     assert env["PYTHONPATH"] == "src"
-    assert argv[:3] == ["python3", "-m", "truthgate"]
+    assert argv[:3] == ["python3", "-m", "trvthnvke"]

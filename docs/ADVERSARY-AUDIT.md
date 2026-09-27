@@ -9,13 +9,13 @@ Original audit ran against 0.1.0. This file records each finding and the fix shi
 | C3 | `ignore: true` auto-pass | reason required; `strict_ignore` fails the claim |
 | C4 | body not entailed by handler | `require_entailment` demands the bound path/version in the body |
 | H5 | path / symlink escape | `security.confine` |
-| H6 | MCP writes any path / `force` | confine + `TRUTHGATE_ALLOW_FORCE` |
-| H7 | policy file unpinned | `.truthgate.lock` SHA-256 |
+| H6 | MCP writes any path / `force` | confine + `TRVTHNVKE_ALLOW_FORCE` |
+| H7 | policy file unpinned | `.trvthnvke.lock` SHA-256 |
 | H8 | mutable Actions tags | SHA-pinned checkout/setup-python/upload-artifact |
 | M9 | heading-in-fence | headings inside fences ignored |
 | M10 | JSON pointer without equals | equals required |
 | M11 | floating flake inputs | nixpkgs 24.11 + flake-utils commit |
-| M12 | `python3 -c` in self-test | replaced with `python3 -m truthgate --version` |
+| M12 | `python3 -c` in self-test | replaced with `python3 -m trvthnvke --version` |
 | H13 | `actions/setup-python` pinned to a SHA that does not exist | corrected to the `v5.1.0` commit |
 | H14 | MCP replies used `Content-Length` framing, unreadable by MCP stdio clients | newline-delimited JSON; framed requests answered in kind |
 | M15 | `upsert_claim` dropped top-level attrs such as `path` | all non-control op keys rendered into the block |
@@ -29,54 +29,54 @@ Spot checks for the fixes that are cheap to verify mechanically.
 <!-- truth:claim
 id: ev-c1
 kind: file_contains
-path: src/truthgate/security.py
+path: src/trvthnvke/security.py
 pattern: shell=False
 -->
-C1's argv-only runner passes `shell=False` in `src/truthgate/security.py`.
+C1's argv-only runner passes `shell=False` in `src/trvthnvke/security.py`.
 <!-- truth:end -->
 
 <!-- truth:claim
 id: ev-c2
 kind: file_contains
-path: src/truthgate/verify.py
+path: src/trvthnvke/verify.py
 pattern: severity attr cannot downgrade
 -->
-C2 holds because `src/truthgate/verify.py` notes the severity attr cannot downgrade a machine failure.
+C2 holds because `src/trvthnvke/verify.py` notes the severity attr cannot downgrade a machine failure.
 <!-- truth:end -->
 
 <!-- truth:claim
 id: ev-h5
 kind: file_contains
-path: src/truthgate/security.py
+path: src/trvthnvke/security.py
 pattern: def confine
 -->
-H5's confinement is `def confine` in `src/truthgate/security.py`.
+H5's confinement is `def confine` in `src/trvthnvke/security.py`.
 <!-- truth:end -->
 
 <!-- truth:claim
 id: ev-h6
 kind: file_contains
-path: src/truthgate/mcp_server.py
-pattern: TRUTHGATE_ALLOW_FORCE
+path: src/trvthnvke/mcp_server.py
+pattern: TRVTHNVKE_ALLOW_FORCE
 -->
-H6's guard checks `TRUTHGATE_ALLOW_FORCE` in `src/truthgate/mcp_server.py`.
+H6's guard checks `TRVTHNVKE_ALLOW_FORCE` in `src/trvthnvke/mcp_server.py`.
 <!-- truth:end -->
 
 <!-- truth:claim
 id: ev-h7
 kind: file_exists
-path: .truthgate.lock
+path: .trvthnvke.lock
 -->
-H7's pin is the `.truthgate.lock` file this repository ships.
+H7's pin is the `.trvthnvke.lock` file this repository ships.
 <!-- truth:end -->
 
 <!-- truth:claim
 id: ev-h8
 kind: file_contains
-path: .github/workflows/truthgate.yml
+path: .github/workflows/trvthnvke.yml
 pattern: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
 -->
-H8's SHA-pinned checkout is `actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11` in `.github/workflows/truthgate.yml`.
+H8's SHA-pinned checkout is `actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11` in `.github/workflows/trvthnvke.yml`.
 <!-- truth:end -->
 
 <!-- truth:claim

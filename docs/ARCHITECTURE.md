@@ -1,22 +1,22 @@
 # Architecture
 
-Truthgate is a DeMoD LLC tool maintained by GitHub user ALH477.
+TrvthNvke is a DeMoD LLC tool maintained by GitHub user ALH477.
 
 <!-- truth:claim
 id: flake-url
 kind: file_contains
 path: flake.nix
-pattern: github:ALH477/truthgate
+pattern: github:ALH477/trvthnvke
 -->
-Other repositories import it as `github:ALH477/truthgate`, the URL `flake.nix` advertises in its template description.
+Other repositories import it as `github:ALH477/trvthnvke`, the URL `flake.nix` advertises in its template description.
 <!-- truth:end -->
 
-Truthgate is three surfaces on one verifier.
+TrvthNvke is three surfaces on one verifier.
 
 ```text truth:ignore
 README.md  --parse-->  Claims
                               \
-.truthgate.toml --policy--+--> Verifier --> exit code + receipt
+.trvthnvke.toml --policy--+--> Verifier --> exit code + receipt
                               /
         repo tree  --evidence-+
 
@@ -35,13 +35,13 @@ Fenced `truth:id=` tokens ride the info string. They are visible in raw Markdown
 <!-- truth:claim
 id: force-fences
 kind: file_contains
-path: .truthgate.toml
+path: .trvthnvke.toml
 pattern: require_bound_fences = true
 -->
-`require_bound_fences = true` in `.truthgate.toml` makes undocumented shell blocks a gate failure. That stops "copy-paste commands that never ran."
+`require_bound_fences = true` in `.trvthnvke.toml` makes undocumented shell blocks a gate failure. That stops "copy-paste commands that never ran."
 <!-- truth:end -->
 
-`truthgate_apply_edit` reverts when the new text fails verification; `truthgate edit --verify` exits non-zero.
+`trvthnvke_apply_edit` reverts when the new text fails verification; `trvthnvke edit --verify` exits non-zero.
 
 <!-- truth:claim
 id: force-fail
@@ -49,7 +49,7 @@ kind: file_contains
 path: hooks/pre-commit
 pattern: verify --fail
 -->
-`hooks/pre-commit` and the Actions workflow both run `truthgate verify --fail`.
+`hooks/pre-commit` and the Actions workflow both run `trvthnvke verify --fail`.
 <!-- truth:end -->
 
 Prose that cannot be checked stays prose. Do not invent a verifier for motivation paragraphs.
@@ -66,10 +66,10 @@ Whole-file rewrites by agents produce silent drift. Ops are addressable:
 <!-- truth:claim
 id: edit-ops-module
 kind: file_contains
-path: src/truthgate/edit.py
+path: src/trvthnvke/edit.py
 pattern: replace_claim_body
 -->
-These ops, `replace_claim_body` included, are implemented in `src/truthgate/edit.py`.
+These ops, `replace_claim_body` included, are implemented in `src/trvthnvke/edit.py`.
 <!-- truth:end -->
 
 ## MCP contract
@@ -79,10 +79,10 @@ The server speaks newline-delimited JSON-RPC 2.0 on stdio, the MCP stdio transpo
 <!-- truth:claim
 id: mcp-structured-content
 kind: file_contains
-path: src/truthgate/mcp_server.py
+path: src/trvthnvke/mcp_server.py
 pattern: structuredContent
 -->
-Tools return JSON in `structuredContent` and a text copy in `content`, as `src/truthgate/mcp_server.py` implements.
+Tools return JSON in `structuredContent` and a text copy in `content`, as `src/trvthnvke/mcp_server.py` implements.
 <!-- truth:end -->
 
 ## What this is not

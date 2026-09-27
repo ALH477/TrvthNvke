@@ -1,5 +1,5 @@
 {
-  description = "Truthgate — DeMoD LLC / ALH477. Importable flake for claim-verified READMEs.";
+  description = "TrvthNvke — DeMoD LLC / ALH477. Importable flake for claim-verified READMEs.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
@@ -9,9 +9,9 @@
   outputs = { self, nixpkgs, flake-utils }:
     let
       overlay = final: prev: {
-        truthgate = final.callPackage ./nix/package.nix {
+        trvthnvke = final.callPackage ./nix/package.nix {
           src = self;
-          version = "0.3.0";
+          version = "0.4.0";
         };
       };
     in
@@ -22,24 +22,24 @@
           overlays = [ overlay ];
         };
       in {
-        packages.truthgate = pkgs.truthgate;
-        packages.default = pkgs.truthgate;
+        packages.trvthnvke = pkgs.trvthnvke;
+        packages.default = pkgs.trvthnvke;
 
-        apps.truthgate = {
+        apps.trvthnvke = {
           type = "app";
-          program = "${pkgs.truthgate}/bin/truthgate";
+          program = "${pkgs.trvthnvke}/bin/trvthnvke";
         };
         apps.mcp = {
           type = "app";
-          program = "${pkgs.truthgate}/bin/truthgate-mcp";
+          program = "${pkgs.trvthnvke}/bin/trvthnvke-mcp";
         };
-        apps.default = self.apps.${system}.truthgate;
+        apps.default = self.apps.${system}.trvthnvke;
 
         devShells.default = pkgs.mkShell {
-          packages = [ pkgs.truthgate pkgs.python3 pkgs.git ];
+          packages = [ pkgs.trvthnvke pkgs.python3 pkgs.git ];
           shellHook = ''
             export PYTHONPATH="$PWD/src''${PYTHONPATH:+:$PYTHONPATH}"
-            echo "DeMoD Truthgate $(truthgate --version | cut -d' ' -f2)"
+            echo "DeMoD TrvthNvke $(trvthnvke --version | cut -d' ' -f2)"
           '';
         };
 
@@ -48,11 +48,11 @@
     // {
       overlays.default = overlay;
       nixosModules.default = import ./nix/module.nix;
-      nixosModules.truthgate = self.nixosModules.default;
+      nixosModules.trvthnvke = self.nixosModules.default;
 
       templates.default = {
         path = ./templates/consumer;
-        description = "Import github:ALH477/truthgate into a DeMoD repository";
+        description = "Import github:ALH477/trvthnvke into a DeMoD repository";
       };
       templates.consumer = self.templates.default;
     };

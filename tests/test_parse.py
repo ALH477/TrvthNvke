@@ -1,19 +1,19 @@
 from pathlib import Path
 
-from truthgate.parse import parse_document
+from trvthnvke.parse import parse_document
 
 SAMPLE = """# Demo
 
 <!-- truth:claim
 id: cli-path
 kind: file_exists
-path: src/truthgate/cli.py
+path: src/trvthnvke/cli.py
 -->
-The CLI lives at `src/truthgate/cli.py`.
+The CLI lives at `src/trvthnvke/cli.py`.
 <!-- truth:end -->
 
 ```bash truth:id=help truth:kind=command truth:expect_exit=0
-python -m truthgate --help
+python -m trvthnvke --help
 ```
 
 ```python truth:ignore

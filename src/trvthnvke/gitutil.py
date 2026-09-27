@@ -3,6 +3,8 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+from .policy import DEFAULT_CONFIG_NAMES
+
 
 def git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
@@ -20,7 +22,7 @@ def find_root(start: Path) -> Path:
     for p in [cur, *cur.parents]:
         if (p / ".git").exists():
             return p
-        if (p / ".truthgate.toml").is_file() or (p / "truthgate.toml").is_file():
+        if any((p / n).is_file() for n in DEFAULT_CONFIG_NAMES):
             return p
     return start.resolve() if start.is_dir() else start.resolve().parent
 
@@ -31,11 +33,11 @@ def install_pre_commit(root: Path) -> Path:
         raise FileNotFoundError("not a git repository (missing .git/hooks)")
     hook = hook_dir / "pre-commit"
     payload = """#!/bin/sh
-# Truthgate README gate
-if command -v truthgate >/dev/null 2>&1; then
-  truthgate verify --fail
+# TrvthNvke README gate
+if command -v trvthnvke >/dev/null 2>&1; then
+  trvthnvke verify --fail
 else
-  python3 -m truthgate verify --fail
+  python3 -m trvthnvke verify --fail
 fi
 """
     hook.write_text(payload, encoding="utf-8")

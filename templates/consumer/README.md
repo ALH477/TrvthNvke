@@ -1,6 +1,6 @@
 # consumer
 
-Example DeMoD repository that imports Truthgate.
+Example DeMoD repository that imports TrvthNvke.
 
 Maintainer: [ALH477](https://github.com/ALH477) · [DeMoD LLC](https://demod.ltd)
 
@@ -10,7 +10,7 @@ Pull the flake from GitHub user **ALH477**:
 
 ```nix truth:ignore
 {
-  inputs.truthgate.url = "github:ALH477/truthgate";
+  inputs.trvthnvke.url = "github:ALH477/trvthnvke";
 }
 ```
 
@@ -19,27 +19,27 @@ id: flake
 kind: file_exists
 path: flake.nix
 -->
-This tree ships `flake.nix` so other DeMoD repos can `nix develop` and get `truthgate` on PATH.
+This tree ships `flake.nix` so other DeMoD repos can `nix develop` and get `trvthnvke` on PATH.
 <!-- truth:end -->
 
 <!-- truth:claim
 id: flake-import
 kind: file_contains
 path: flake.nix
-pattern: github:ALH477/truthgate
+pattern: github:ALH477/trvthnvke
 -->
-`flake.nix` pins `inputs.truthgate.url = "github:ALH477/truthgate"`.
+`flake.nix` pins `inputs.trvthnvke.url = "github:ALH477/trvthnvke"`.
 <!-- truth:end -->
 
 ## Usage
 
 ```bash truth:id=policy-present truth:kind=command truth:expect_exit=0
-test -f .truthgate.toml
+test -f .trvthnvke.toml
 ```
 
 Enter the shell after you publish or path-override the input:
 
 ```bash truth:ignore
 nix develop
-truthgate verify --fail
+trvthnvke verify --fail
 ```

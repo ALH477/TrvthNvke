@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="TrvthNvke">
+  <title>TrvthNvke</title>
+  <!-- Self-contained: no external font, no remote fetch, no CSS. Renders the
+       same in a browser, a Markdown preview and an offline SVG viewer. -->
+  <rect width="64" height="64" rx="12" fill="#f7c518"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="11.25" fill="none" stroke="#10141a" stroke-opacity="0.22" stroke-width="1.5"/>
+  <g fill="#10141a">
+    <path d="M26 21.608L18 7.751A28 28 0 0 1 46 7.751L38 21.608A12 12 0 0 0 26 21.608Z"/>
+    <path d="M44 32L60 32A28 28 0 0 1 46 56.249L38 42.392A12 12 0 0 0 44 32Z"/>
+    <path d="M26 42.392L18 56.249A28 28 0 0 1 4 32L20 32A12 12 0 0 0 26 42.392Z"/>
+    <circle cx="32" cy="32" r="7"/>
+  </g>
+  <!-- the hub is a seal: the check is what separates a hazard sign from a gate.
+       At favicon sizes it collapses to a dot and the trefoil still reads. -->
+  <path d="M28.7 32.4l2.4 2.5 4.3-5.2" fill="none" stroke="#f7c518"
+        stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

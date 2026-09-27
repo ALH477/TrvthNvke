@@ -26,8 +26,11 @@ class RegexTimeout(ValueError):
     pass
 
 
-ALLOWED_ENV_DEFAULT = ("PYTHONPATH", "TRUTHGATE_OFFLINE", "LANG", "LC_ALL")
+ALLOWED_ENV_DEFAULT = ("PYTHONPATH", "TRVTHNVKE_OFFLINE", "TRUTHGATE_OFFLINE", "LANG", "LC_ALL")
 DEFAULT_ARGV_PREFIXES = (
+    ("python3", "-m", "trvthnvke"),
+    ("python", "-m", "trvthnvke"),
+    # pre-0.4.0 module name, still allowed so old policies keep verifying
     ("python3", "-m", "truthgate"),
     ("python", "-m", "truthgate"),
     ("test", "-f"),
@@ -52,7 +55,7 @@ _EXCLUDED_TOP_DIRS = {
     ".mypy_cache",
     ".ruff_cache",
 }
-_INCLUDED_HIDDEN_DIRS = {".github", ".truthgate"}
+_INCLUDED_HIDDEN_DIRS = {".github", ".trvthnvke", ".truthgate"}
 
 
 @functools.lru_cache(maxsize=None)
@@ -167,7 +170,7 @@ def run_confined_command(
         if key not in allowed_env:
             raise CommandDenied(f"environment key not allowed: {key}")
     env = {k: os.environ[k] for k in ("PATH", "HOME", "LANG", "LC_ALL", "TZ") if k in os.environ}
-    env["TRUTHGATE_OFFLINE"] = "1"
+    env["TRVTHNVKE_OFFLINE"] = "1"
     env["PYTHONHASHSEED"] = "0"
     for key, val in extra_env.items():
         if key == "PYTHONPATH":
@@ -189,7 +192,7 @@ def run_confined_command(
             try:
                 confine(root, arg)
             except ConfineError:
-                # flags like -m truthgate are not paths
+                # flags like -m trvthnvke are not paths
                 if arg.startswith(".") or "/" in arg:
                     raise
     hard = min(timeout, extra_timeout_hard)

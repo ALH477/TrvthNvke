@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from truthgate.policy import Policy, DocPolicy
-from truthgate.verify import verify_repo
+from trvthnvke.policy import Policy, DocPolicy
+from trvthnvke.verify import verify_repo
 
 
 def _write_repo(tmp: Path) -> None:

@@ -1,6 +1,6 @@
 # demo-app
 
-Tiny consumer of Truthgate.
+Tiny consumer of TrvthNvke.
 
 ## Install
 

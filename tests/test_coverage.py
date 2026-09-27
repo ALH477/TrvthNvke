@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from truthgate.policy import DocPolicy, Policy
-from truthgate.security import discover_top_dirs, pathish_pattern
-from truthgate.verify import verify_repo
+from trvthnvke.policy import DocPolicy, Policy
+from trvthnvke.security import discover_top_dirs, pathish_pattern
+from trvthnvke.verify import verify_repo
 
 
 def _write_lib_repo(tmp: Path) -> None:
@@ -63,7 +63,7 @@ def test_doc_coverage_off_silences_warning(tmp_path: Path) -> None:
 
 
 def test_discover_top_dirs_excludes_and_includes(tmp_path: Path) -> None:
-    for name in (".git", "__pycache__", "result", "foo.egg-info", ".github", ".truthgate", "lib"):
+    for name in (".git", "__pycache__", "result", "foo.egg-info", ".github", ".trvthnvke", "lib"):
         (tmp_path / name).mkdir()
     dirs = discover_top_dirs(tmp_path)
     assert ".git" not in dirs
@@ -71,7 +71,7 @@ def test_discover_top_dirs_excludes_and_includes(tmp_path: Path) -> None:
     assert "result" not in dirs
     assert "foo.egg-info" not in dirs
     assert ".github" in dirs
-    assert ".truthgate" in dirs
+    assert ".trvthnvke" in dirs
     assert "lib" in dirs
 
 

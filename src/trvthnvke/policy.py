@@ -9,7 +9,14 @@ from typing import Any
 from .security import DEFAULT_ARGV_PREFIXES, DEFAULT_COVERAGE_EXTS
 
 
-DEFAULT_CONFIG_NAMES = (".truthgate.toml", "truthgate.toml")
+DEFAULT_CONFIG_NAMES = (
+    ".trvthnvke.toml",
+    "trvthnvke.toml",
+    # Accepted for compatibility: this tool was named truthgate before 0.4.0.
+    # New names win, so a repo carrying both is unambiguous.
+    ".truthgate.toml",
+    "truthgate.toml",
+)
 
 
 @dataclass
@@ -31,12 +38,12 @@ class Policy:
     command_allow: list[list[str]] = field(
         default_factory=lambda: [list(p) for p in DEFAULT_ARGV_PREFIXES]
     )
-    allowed_env: list[str] = field(default_factory=lambda: ["PYTHONPATH", "TRUTHGATE_OFFLINE"])
-    receipt_path: str = ".truthgate/receipt.json"
+    allowed_env: list[str] = field(default_factory=lambda: ["PYTHONPATH", "TRVTHNVKE_OFFLINE"])
+    receipt_path: str = ".trvthnvke/receipt.json"
     version_file: str = "pyproject.toml"
     version_key: str = "project.version"
     require_lock: bool = False
-    lock_path: str = ".truthgate.lock"
+    lock_path: str = ".trvthnvke.lock"
     coverage: str = "paths"
     coverage_severity: str = "warning"
     coverage_dirs: list[str] = field(default_factory=list)
@@ -110,12 +117,12 @@ def load_policy(root: Path) -> Policy:
         command_timeout_sec=int(policy_raw.get("command_timeout_sec", 15)),
         command_mode=str(policy_raw.get("command_mode", "allowlist")),
         command_allow=prefixes,
-        allowed_env=list(policy_raw.get("allowed_env") or ["PYTHONPATH", "TRUTHGATE_OFFLINE"]),
-        receipt_path=str(policy_raw.get("receipt_path", ".truthgate/receipt.json")),
+        allowed_env=list(policy_raw.get("allowed_env") or ["PYTHONPATH", "TRVTHNVKE_OFFLINE"]),
+        receipt_path=str(policy_raw.get("receipt_path", ".trvthnvke/receipt.json")),
         version_file=str(policy_raw.get("version_file", "pyproject.toml")),
         version_key=str(policy_raw.get("version_key", "project.version")),
         require_lock=bool(policy_raw.get("require_lock", False)),
-        lock_path=str(policy_raw.get("lock_path", ".truthgate.lock")),
+        lock_path=str(policy_raw.get("lock_path", ".trvthnvke.lock")),
         coverage=str(policy_raw.get("coverage", "paths")),
         coverage_severity=str(policy_raw.get("coverage_severity", "warning")),
         coverage_dirs=list(policy_raw.get("coverage_dirs") or []),
@@ -129,7 +136,7 @@ def load_policy(root: Path) -> Policy:
 
 
 def default_config_text() -> str:
-    return """# Truthgate policy — bind README claims to repository reality.
+    return """# TrvthNvke policy — bind README claims to repository reality.
 
 [policy]
 fail_on = "error"
@@ -137,7 +144,7 @@ allow_unbound_prose = true
 command_mode = "allowlist"
 command_timeout_sec = 15
 require_lock = true
-lock_path = ".truthgate.lock"
+lock_path = ".trvthnvke.lock"
 coverage = "paths"
 coverage_severity = "warning"
 # coverage_dirs = ["src", "docs"]      # default: every top-level directory
@@ -147,12 +154,12 @@ coverage_severity = "warning"
 require_entailment = true
 ignore_requires_reason = true
 strict_ignore = true
-receipt_path = ".truthgate/receipt.json"
+receipt_path = ".trvthnvke/receipt.json"
 version_file = "pyproject.toml"
 version_key = "project.version"
 command_allow = [
-  ["python3", "-m", "truthgate"],
-  ["python", "-m", "truthgate"],
+  ["python3", "-m", "trvthnvke"],
+  ["python", "-m", "trvthnvke"],
   ["test", "-f"],
   ["test", "-d"],
 ]
@@ -175,7 +182,7 @@ def find_policy_file(root: Path) -> Path | None:
 def dump_lock(root: Path, lock_path: str) -> Path:
     cfg = find_policy_file(root)
     if cfg is None:
-        raise FileNotFoundError("no .truthgate.toml to lock")
+        raise FileNotFoundError("no .trvthnvke.toml to lock")
     payload = {
         "file": cfg.name,
         "sha256": __import__("hashlib").sha256(cfg.read_bytes()).hexdigest(),

@@ -1,4 +1,8 @@
-# Truthgate
+<img src="docs/assets/trvthnvke-emblem.svg" alt="" width="72" height="72" align="right">
+
+# TrvthNvke
+
+[![gated by TrvthNvke](docs/assets/trvthnvke-badge.svg)](https://github.com/ALH477/trvthnvke)
 
 **DeMoD LLC** · maintained by [ALH477](https://github.com/ALH477)
 
@@ -16,9 +20,30 @@ id: version
 kind: version_sync
 path: pyproject.toml
 key: project.version
-equals: 0.3.0
+equals: 0.4.0
 -->
-Current version: **0.3.0**.
+Current version: **0.4.0**.
+<!-- truth:end -->
+
+<!-- truth:claim
+id: badge
+kind: file_exists
+path: docs/assets/trvthnvke-badge.svg
+-->
+The README badge is `docs/assets/trvthnvke-badge.svg`, committed here rather
+than fetched from a shield service: no remote call, no embedded font, and every
+label pinned with `textLength`, so it renders identically on GitHub, in an
+offline Markdown preview and in a bare SVG viewer.
+<!-- truth:end -->
+
+<!-- truth:claim
+id: emblem
+kind: file_exists
+path: docs/assets/trvthnvke-emblem.svg
+-->
+The mark is `docs/assets/trvthnvke-emblem.svg` — a radiation trefoil whose hub
+is a seal. At favicon size the check collapses to a dot and the trefoil still
+reads.
 <!-- truth:end -->
 
 ## Install
@@ -26,55 +51,69 @@ Current version: **0.3.0**.
 <!-- truth:claim
 id: cli-module
 kind: file_exists
-path: src/truthgate/cli.py
+path: src/trvthnvke/cli.py
 -->
-The CLI entry is `src/truthgate/cli.py`.
+The CLI entry is `src/trvthnvke/cli.py`.
 <!-- truth:end -->
 
 <!-- truth:claim
 id: console-script
 kind: entrypoint
-name: truthgate
-target: truthgate.cli:main
+name: trvthnvke
+target: trvthnvke.cli:main
 -->
-It is exposed as the `truthgate` console script, wired to `truthgate.cli:main`.
+It is exposed as the `trvthnvke` console script, wired to `trvthnvke.cli:main`.
+<!-- truth:end -->
+
+<!-- truth:claim
+id: legacy-console-script
+kind: entrypoint
+name: truthgate
+target: trvthnvke.cli:main
+-->
+This project was called **truthgate** before 0.4.0. The `truthgate` console
+script is kept as an alias onto the same `trvthnvke.cli:main` entry point, and
+`.truthgate.toml` / `truthgate.toml` are still accepted as policy filenames —
+new names win where both exist. `tests/test_legacy_name.py` exercises that
+fallback, so removing it fails the suite rather than silently breaking every
+repository written against the old name.
 <!-- truth:end -->
 
 <!-- truth:claim
 id: mcp-module
 kind: file_exists
-path: src/truthgate/mcp_server.py
+path: src/trvthnvke/mcp_server.py
 -->
-The agent server is `src/truthgate/mcp_server.py`.
+The agent server is `src/trvthnvke/mcp_server.py`.
 <!-- truth:end -->
 
 <!-- truth:claim
 id: mcp-entry
 kind: python_symbol
-module: truthgate.mcp_server
+module: trvthnvke.mcp_server
 symbol: run_stdio
 -->
 Its stdio loop is `run_stdio`, a real function, not a promise.
 <!-- truth:end -->
 
 ```bash truth:id=help truth:kind=command truth:expect_exit=0 truth:expect_stdout=Force README
-PYTHONPATH=src python3 -m truthgate --help
+PYTHONPATH=src python3 -m trvthnvke --help
 ```
 
 From a checkout:
 
-```bash truth:id=editable-help truth:kind=command truth:expect_exit=0 truth:expect_stdout=0.3.0
-PYTHONPATH=src python3 -m truthgate --version
+```bash truth:id=editable-help truth:kind=command truth:expect_exit=0 truth:expect_stdout=0.4.0
+PYTHONPATH=src python3 -m trvthnvke --version
 ```
 
 ## Usage
 
 ```bash truth:id=extract-self truth:kind=command truth:expect_exit=0 truth:expect_stdout=cli-module
-PYTHONPATH=src python3 -m truthgate extract --doc README.md
+PYTHONPATH=src python3 -m trvthnvke extract --doc README.md
 ```
 
 ```bash truth:id=schema truth:kind=command truth:expect_exit=0 truth:expect_stdout=file_exists
-PYTHONPATH=src python3 -m truthgate schema
+PYTHONPATH=src python3 -m trvthnvke schema
 ```
 
 Structured edits (what the MCP applies):
@@ -85,15 +124,15 @@ Structured edits (what the MCP applies):
     "op": "upsert_claim",
     "id": "cli-module",
     "kind": "file_exists",
-    "path": "src/truthgate/cli.py",
+    "path": "src/trvthnvke/cli.py",
     "after_heading": "Install",
-    "body": "The CLI entry is `src/truthgate/cli.py`."
+    "body": "The CLI entry is `src/trvthnvke/cli.py`."
   }
 ]
 ```
 
 ```bash truth:id=edit-dry truth:kind=command truth:expect_exit=0
-PYTHONPATH=src python3 -m truthgate edit --doc README.md --dry-run --ops '[{"op":"replace_claim_body","id":"version","body":"Current version: **0.3.0**."}]'
+PYTHONPATH=src python3 -m trvthnvke edit --doc README.md --dry-run --ops '[{"op":"replace_claim_body","id":"version","body":"Current version: **0.4.0**."}]'
 ```
 
 ## Flake
@@ -119,7 +158,7 @@ id: flake-module
 kind: file_exists
 path: nix/module.nix
 -->
-The NixOS module is `nix/module.nix` (`demod.truthgate.enable`).
+The NixOS module is `nix/module.nix` (`demod.trvthnvke.enable`).
 <!-- truth:end -->
 
 <!-- truth:claim
@@ -138,27 +177,27 @@ Add the flake from GitHub user **ALH477**:
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    truthgate.url = "github:ALH477/truthgate";
+    trvthnvke.url = "github:ALH477/trvthnvke";
   };
 
-  outputs = { self, nixpkgs, flake-utils, truthgate }:
+  outputs = { self, nixpkgs, flake-utils, trvthnvke }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ truthgate.overlays.default ];
+          overlays = [ trvthnvke.overlays.default ];
         };
       in {
         devShells.default = pkgs.mkShell {
-          packages = [ pkgs.truthgate ];
+          packages = [ pkgs.trvthnvke ];
         };
-        checks.readme = pkgs.runCommand "truthgate-readme" {
-          nativeBuildInputs = [ pkgs.truthgate ];
+        checks.readme = pkgs.runCommand "trvthnvke-readme" {
+          nativeBuildInputs = [ pkgs.trvthnvke ];
           src = self;
         } ''
           cp -r "$src"/. .
           chmod -R u+w .
-          truthgate verify --fail
+          trvthnvke verify --fail
           touch "$out"
         '';
       });
@@ -168,35 +207,35 @@ Add the flake from GitHub user **ALH477**:
 From a published checkout:
 
 ```bash truth:ignore
-nix flake init -t github:ALH477/truthgate
-nix develop github:ALH477/truthgate
-nix run github:ALH477/truthgate -- verify --fail
-nix run github:ALH477/truthgate#mcp
+nix flake init -t github:ALH477/trvthnvke
+nix develop github:ALH477/trvthnvke
+nix run github:ALH477/trvthnvke -- verify --fail
+nix run github:ALH477/trvthnvke#mcp
 ```
 
 Path override while this tree is still local:
 
 ```bash truth:ignore
-nix develop github:ALH477/your-repo --override-input truthgate path:../truthgate
+nix develop github:ALH477/your-repo --override-input trvthnvke path:../trvthnvke
 ```
 
 NixOS / Oligarchy-style import:
 
 ```nix truth:ignore
 {
-  inputs.truthgate.url = "github:ALH477/truthgate";
-  outputs = { nixpkgs, truthgate, ... }: {
+  inputs.trvthnvke.url = "github:ALH477/trvthnvke";
+  outputs = { nixpkgs, trvthnvke, ... }: {
     nixosConfigurations.holdfast = nixpkgs.lib.nixosSystem {
       modules = [
-        truthgate.nixosModules.default
-        { demod.truthgate.enable = true; }
+        trvthnvke.nixosModules.default
+        { demod.trvthnvke.enable = true; }
       ];
     };
   };
 }
 ```
 
-Outputs: `packages.truthgate`, `overlays.default`, `apps.truthgate`, `apps.mcp`, `devShells.default`, `nixosModules.default`, `templates.default`.
+Outputs: `packages.trvthnvke`, `overlays.default`, `apps.trvthnvke`, `apps.mcp`, `devShells.default`, `nixosModules.default`, `templates.default`.
 
 ## Example
 
@@ -214,9 +253,9 @@ path: templates/consumer/flake.nix
 id: example-import-url
 kind: file_contains
 path: templates/consumer/flake.nix
-pattern: github:ALH477/truthgate
+pattern: github:ALH477/trvthnvke
 -->
-`templates/consumer/flake.nix` pins `inputs.truthgate.url = "github:ALH477/truthgate"`.
+`templates/consumer/flake.nix` pins `inputs.trvthnvke.url = "github:ALH477/trvthnvke"`.
 <!-- truth:end -->
 
 <!-- truth:claim
@@ -228,14 +267,14 @@ path: templates/consumer/README.md
 <!-- truth:end -->
 
 ```bash truth:id=example-verify truth:kind=command truth:expect_exit=0 truth:expect_stdout=PASS
-PYTHONPATH=src python3 -m truthgate --root templates/consumer verify
+PYTHONPATH=src python3 -m trvthnvke --root templates/consumer verify
 ```
 
 What the example proves:
 
 1. A DeMoD repo declares one flake input on **ALH477**.
-2. The overlay puts `truthgate` on PATH inside `nix develop`.
-3. `checks.readme` is a Nix gate equivalent to `truthgate verify --fail`.
+2. The overlay puts `trvthnvke` on PATH inside `nix develop`.
+3. `checks.readme` is a Nix gate equivalent to `trvthnvke verify --fail`.
 4. The consumer README binds its own `flake.nix` so the import URL cannot silently change.
 
 ## TruthMD
@@ -248,10 +287,10 @@ Block claim (HTML comment, invisible on GitHub):
 <!-- truth:claim
 id: cli-module
 kind: file_exists
-path: src/truthgate/cli.py
+path: src/trvthnvke/cli.py
 severity: error
 -->
-The CLI entry is `src/truthgate/cli.py`.
+The CLI entry is `src/trvthnvke/cli.py`.
 <!-- truth:end -->
 ```
 
@@ -259,7 +298,7 @@ Fenced claim (the fence *is* the evidence):
 
 ~~~~markdown truth:ignore
 ```bash truth:id=help truth:kind=command truth:expect_exit=0
-python3 -m truthgate --help
+python3 -m trvthnvke --help
 ```
 ~~~~
 
@@ -289,14 +328,14 @@ print("documentation sample")
 
 `file_contains` matches a literal substring by default. Use `regex:` instead of `pattern:` to opt into Python `re` (256-char pattern cap, 2 MiB text cap, `regex_timeout_sec` timeout). Path-token coverage warnings scan every top-level directory of the repository unless `coverage_dirs` narrows the list.
 
-Policy lives in `.truthgate.toml`.
+Policy lives in `.trvthnvke.toml`.
 
 <!-- truth:claim
 id: policy-file
 kind: file_exists
-path: .truthgate.toml
+path: .trvthnvke.toml
 -->
-This repository is gated by `.truthgate.toml`.
+This repository is gated by `.trvthnvke.toml`.
 <!-- truth:end -->
 
 ## CI gates
@@ -312,9 +351,9 @@ Gates fail a commit or PR when any of these fire at `error` severity:
 <!-- truth:claim
 id: workflow
 kind: file_exists
-path: .github/workflows/truthgate.yml
+path: .github/workflows/trvthnvke.yml
 -->
-GitHub Actions workflow: `.github/workflows/truthgate.yml`.
+GitHub Actions workflow: `.github/workflows/trvthnvke.yml`.
 <!-- truth:end -->
 
 <!-- truth:claim
@@ -322,7 +361,7 @@ id: hook
 kind: file_exists
 path: hooks/pre-commit
 -->
-Local hook template: `hooks/pre-commit`. Install with `python3 -m truthgate install-hook`.
+Local hook template: `hooks/pre-commit`. Install with `python3 -m trvthnvke install-hook`.
 <!-- truth:end -->
 
 Relative links that 404 become warnings (not merge blockers unless `fail_on = "warning"`).
@@ -334,9 +373,9 @@ stdio MCP server for agents. No extra dependencies.
 ```json truth:ignore
 {
   "mcpServers": {
-    "truthgate": {
+    "trvthnvke": {
       "command": "python3",
-      "args": ["-m", "truthgate", "mcp"],
+      "args": ["-m", "trvthnvke", "mcp"],
       "cwd": "/path/to/repo"
     }
   }
@@ -347,12 +386,12 @@ Tools:
 
 | Tool | Role |
 | --- | --- |
-| `truthgate_status` | policy + docs |
-| `truthgate_list_claims` | extract claims |
-| `truthgate_verify` | run gates |
-| `truthgate_propose_edit` | dry-run ops |
-| `truthgate_apply_edit` | apply ops; **reverts if gates fail** unless `force` |
-| `truthgate_schema` | kinds + ops |
+| `trvthnvke_status` | policy + docs |
+| `trvthnvke_list_claims` | extract claims |
+| `trvthnvke_verify` | run gates |
+| `trvthnvke_propose_edit` | dry-run ops |
+| `trvthnvke_apply_edit` | apply ops; **reverts if gates fail** unless `force` |
+| `trvthnvke_schema` | kinds + ops |
 
 Allowed edit ops: `replace_claim_body`, `upsert_claim`, `remove_claim`, `replace_section`, `set_fence_meta`.
 
@@ -363,10 +402,10 @@ Agents must not rewrite the whole README. They propose ops, verify, then apply.
 <!-- truth:claim
 id: package-layout
 kind: glob_count
-glob: src/truthgate/*.py
+glob: src/trvthnvke/*.py
 min: 8
 -->
-Implementation lives under `src/truthgate/` (parser, verifier, editor, MCP, CLI).
+Implementation lives under `src/trvthnvke/` (parser, verifier, editor, MCP, CLI).
 <!-- truth:end -->
 
 ## License
