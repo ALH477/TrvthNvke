@@ -10,7 +10,7 @@ Pull the flake from GitHub user **ALH477**:
 
 ```nix truth:ignore
 {
-  inputs.trvthnvke.url = "github:ALH477/trvthnvke";
+  inputs.trvthnvke.url = "github:ALH477/TrvthNvke";
 }
 ```
 
@@ -26,9 +26,9 @@ This tree ships `flake.nix` so other DeMoD repos can `nix develop` and get `trvt
 id: flake-import
 kind: file_contains
 path: flake.nix
-pattern: github:ALH477/trvthnvke
+pattern: github:ALH477/TrvthNvke
 -->
-`flake.nix` pins `inputs.trvthnvke.url = "github:ALH477/trvthnvke"`.
+`flake.nix` pins `inputs.trvthnvke.url = "github:ALH477/TrvthNvke"`.
 <!-- truth:end -->
 
 ## Usage

@@ -1,10 +1,10 @@
 {
-  description = "Example DeMoD repository importing TrvthNvke from github:ALH477/trvthnvke";
+  description = "Example DeMoD repository importing TrvthNvke from github:ALH477/TrvthNvke";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    trvthnvke.url = "github:ALH477/trvthnvke";
+    trvthnvke.url = "github:ALH477/TrvthNvke";
   };
 
   outputs = { self, nixpkgs, flake-utils, trvthnvke }:

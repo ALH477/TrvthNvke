@@ -52,7 +52,7 @@
 
       templates.default = {
         path = ./templates/consumer;
-        description = "Import github:ALH477/trvthnvke into a DeMoD repository";
+        description = "Import github:ALH477/TrvthNvke into a DeMoD repository";
       };
       templates.consumer = self.templates.default;
     };

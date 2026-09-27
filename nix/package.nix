@@ -37,7 +37,7 @@ stdenvNoCC.mkDerivation {
 
   meta = with lib; {
     description = "Git-enforced, claim-verified READMEs with CI gates and an agent MCP";
-    homepage = "https://github.com/ALH477/trvthnvke";
+    homepage = "https://github.com/ALH477/TrvthNvke";
     license = licenses.asl20;
     maintainers = [{
       name = "ALH477";

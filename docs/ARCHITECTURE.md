@@ -6,9 +6,9 @@ TrvthNvke is a DeMoD LLC tool maintained by GitHub user ALH477.
 id: flake-url
 kind: file_contains
 path: flake.nix
-pattern: github:ALH477/trvthnvke
+pattern: github:ALH477/TrvthNvke
 -->
-Other repositories import it as `github:ALH477/trvthnvke`, the URL `flake.nix` advertises in its template description.
+Other repositories import it as `github:ALH477/TrvthNvke`, the URL `flake.nix` advertises in its template description.
 <!-- truth:end -->
 
 TrvthNvke is three surfaces on one verifier.

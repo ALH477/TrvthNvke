@@ -2,7 +2,7 @@
 
 # TrvthNvke
 
-[![gated by TrvthNvke](docs/assets/trvthnvke-badge.svg)](https://github.com/ALH477/trvthnvke)
+[![gated by TrvthNvke](docs/assets/trvthnvke-badge.svg)](https://github.com/ALH477/TrvthNvke)
 
 **DeMoD LLC** · maintained by [ALH477](https://github.com/ALH477)
 
@@ -177,7 +177,7 @@ Add the flake from GitHub user **ALH477**:
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    trvthnvke.url = "github:ALH477/trvthnvke";
+    trvthnvke.url = "github:ALH477/TrvthNvke";
   };
 
   outputs = { self, nixpkgs, flake-utils, trvthnvke }:
@@ -207,10 +207,10 @@ Add the flake from GitHub user **ALH477**:
 From a published checkout:
 
 ```bash truth:ignore
-nix flake init -t github:ALH477/trvthnvke
-nix develop github:ALH477/trvthnvke
-nix run github:ALH477/trvthnvke -- verify --fail
-nix run github:ALH477/trvthnvke#mcp
+nix flake init -t github:ALH477/TrvthNvke
+nix develop github:ALH477/TrvthNvke
+nix run github:ALH477/TrvthNvke -- verify --fail
+nix run github:ALH477/TrvthNvke#mcp
 ```
 
 Path override while this tree is still local:
@@ -223,7 +223,7 @@ NixOS / Oligarchy-style import:
 
 ```nix truth:ignore
 {
-  inputs.trvthnvke.url = "github:ALH477/trvthnvke";
+  inputs.trvthnvke.url = "github:ALH477/TrvthNvke";
   outputs = { nixpkgs, trvthnvke, ... }: {
     nixosConfigurations.holdfast = nixpkgs.lib.nixosSystem {
       modules = [
@@ -253,9 +253,9 @@ path: templates/consumer/flake.nix
 id: example-import-url
 kind: file_contains
 path: templates/consumer/flake.nix
-pattern: github:ALH477/trvthnvke
+pattern: github:ALH477/TrvthNvke
 -->
-`templates/consumer/flake.nix` pins `inputs.trvthnvke.url = "github:ALH477/trvthnvke"`.
+`templates/consumer/flake.nix` pins `inputs.trvthnvke.url = "github:ALH477/TrvthNvke"`.
 <!-- truth:end -->
 
 <!-- truth:claim
