@@ -8,6 +8,9 @@
 
 Git-enforced READMEs for DeMoD repositories. Every checkable sentence is a claim. CI, a pre-commit hook, and a Nix flake refuse drift. Agents edit through a dedicated MCP, not by freehand rewrite.
 
+
+<img width="212" height="238" alt="grok_imagine_8605121394012" src="https://github.com/user-attachments/assets/46b7f0be-f654-4df8-bc29-b26d6f05e5ae" />
+
 <!-- truth:claim
 id: org
 kind: prose
